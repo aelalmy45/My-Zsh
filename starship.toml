@@ -9,7 +9,7 @@ command_timeout = 1000
 scan_timeout = 30
 
 format = """
-[╭─ ](240)$os $directory\
+[╭─](240)[\\(](240)$os[\\)](240)[─](240)[\\[](240)$directory[\\]](240) \
 $git_branch\
 $git_status\
 $fill\
@@ -81,13 +81,13 @@ ahead = "⇡${count}"
 behind = "⇣${count}"
 diverged = "⇕⇡${ahead_count}⇣${behind_count}"
 
-staged = "+${count}"
-modified = "!${count}"
-deleted = "✘${count}"
-renamed = "»${count}"
-untracked = "?${count}"
-stashed = "*${count}"
-conflicted = "=${count}"
+staged = "+${count} "
+modified = "!${count} "
+deleted = "✘${count} "
+renamed = "»${count} "
+untracked = "?${count} "
+stashed = "*${count} "
+conflicted = "=${count} "
 
 # --------------------------------------------------
 # Command Duration
