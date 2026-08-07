@@ -1,5 +1,3 @@
-python $HOME/WeatherCLI/dashboard.py
-
 # Powerful but minimal zsh configuration
 # Author: Radley E. Sidwell-Lewis
 # GitHub: https://www.github.com/radleylewis/zsh
@@ -109,6 +107,8 @@ source "$ZDOTDIR/plugins.zsh"
 # Prompt/theme
 source "$ZDOTDIR/prompt.zsh"
 
+# Banner
+source "$ZDOTDIR/banner.zsh"
 
 # =========================================================
 # Node / NVM

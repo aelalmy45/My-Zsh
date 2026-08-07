@@ -1,6 +1,9 @@
 # Python
 alias py='python'
 
+# Weather Python
+alias weather='py ~/WeatherCLI/dashboard.py'
+
 # rm -rf
 alias rm='rm -rf'
 
@@ -29,9 +32,6 @@ alias tree='eza --tree --icons'
 
 # Reuse ls completions for eza (avoids defining a separate completion function)
 compdef eza=ls
-
-# Better cat
-alias cat='bat'
 
 # =========================================================
 # Core utilities
