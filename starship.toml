@@ -9,7 +9,7 @@ command_timeout = 1000
 scan_timeout = 30
 
 format = """
-[╭─](240)[\\(](240)$os[\\)](240)[─](240)[\\[](240)$directory[\\]](240) \
+[╭─](243)[\\(](243)$os[\\)](243)[─](243)[\\[](243)$directory[\\]](243) \
 $git_branch\
 $git_status\
 $fill\
@@ -19,8 +19,8 @@ $python\
 $rust\
 $golang\
 $package
-[│](240)
-[╰─](240)$character"""
+[│](243)
+[╰─](243)$character"""
 
 # --------------------------------------------------
 # Fill
