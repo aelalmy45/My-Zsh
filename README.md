@@ -1,3 +1,3 @@
 # My-Zsh
 
-![Screenshot from MyZsh](images/Screenshot.jpg) 
+![Screenshot from MyZsh](images/Screenshot.jpg)
