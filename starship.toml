@@ -6,7 +6,7 @@
 
 add_newline = true
 command_timeout = 1000
-scan_timeout = 30
+scan_timeout = 100
 
 format = """
 [╭─](243)[\\(](243)$os[\\)](243)[─](243)[\\[](243)$directory[\\]](243) \
