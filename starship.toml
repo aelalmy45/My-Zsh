@@ -21,12 +21,6 @@ $package
 [│](243)
 [╰─](243)$character"""
 
-# # --------------------------------------------------
-# # Fill
-# # --------------------------------------------------
-#
-# [fill]
-# symbol = " "
 
 # --------------------------------------------------
 # OS
@@ -34,7 +28,7 @@ $package
 
 [os]
 disabled = false
-style = "bold blue"
+style = "bold #017BFF"
 format = "[$symbol ]($style)"
 
 [os.symbols]
@@ -49,11 +43,11 @@ Macos = ""
 # --------------------------------------------------
 
 [directory]
-style = "bold cyan"
+style = "bold #009F00"
 format = "[$path]($style)[$read_only]($read_only_style) "
 home_symbol = "~"
 read_only = " "
-read_only_style = "red"
+read_only_style = "#FF0000"
 
 truncation_length = 2
 truncate_to_repo = false
@@ -120,10 +114,11 @@ format = "[$symbol$version]($style) "
 # --------------------------------------------------
 
 [python]
+generic_venv_names = []
 symbol = " "
 python_binary = "python3"
 style = "yellow"
-format = "[$symbol$version]($style) "
+format = "[(\\($virtualenv\\))](#00FFFF) [$symbol$version]($style) "
 
 # --------------------------------------------------
 # Rust
@@ -148,6 +143,6 @@ format = "[$symbol$version]($style) "
 # --------------------------------------------------
 
 [character]
-success_symbol = "[❯](bold green)"
-error_symbol = "[󰅙 ❯](bold red)"
-vimcmd_symbol = "[NORMAL ❮](bold blue)"
+success_symbol = "[❯](bold #009F00)"
+error_symbol = "[󰅙 ❯](bold #FF0000)"
+vimcmd_symbol = "[NORMAL ❮](bold #017BFF)"

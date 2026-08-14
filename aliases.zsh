@@ -2,7 +2,7 @@
 alias py='python'
 
 # Weather Python
-alias weather='py ~/WeatherCLI/dashboard.py'
+alias weather='py ~/My-Project/WeatherCLI/dashboard.py'
 
 # rm -rf
 alias rm='rm -rf'
