@@ -21,11 +21,12 @@ fi
 # ---------- GPG ----------
 export GPG_TTY=$(tty)
 
+# ---------- PATH -------------
+export ZDOTDIR="$HOME/.config/zsh"
+
 # ---------- Starship ----------
 export STARSHIP_CONFIG="$ZDOTDIR/starship.toml"
 
 # ---------- PATH ----------
 # Personal binaries/scripts
 export PATH="$HOME/.local/bin:$PATH"
-
-export ZDOTDIR="$HOME/.config/zsh"
