@@ -150,4 +150,3 @@ This configuration builds on the excellent [zsh setup by Radley Sidwell-Lewis](h
 ## License
 
 Add a license of your choice here (e.g. [MIT](https://choosealicense.com/licenses/mit/)) before publishing, especially since this project builds on another author's work — check their license terms too.
-
