@@ -2,7 +2,9 @@
 
 A minimal, fast, and fully self-installing Zsh configuration built for **Termux** (Android). One command clones it, one script sets it up — no manual dependency chasing.
 
-![Screenshot from MyZsh](images/Screenshot.jpg)
+![Screenshot 1 from MyZsh](images/Screenshot.jpg)
+--- 
+![Screenshot 2 from MyZsh](images/Screenshot_2.jpg)
 
 ## Features
 
