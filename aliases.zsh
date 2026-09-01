@@ -8,7 +8,7 @@ alias weather='py ~/My-Project/WeatherCLI/dashboard.py'
 alias rm='rm -rf'
 
 # PKG update && PKG upgrade
-alias pu='pkg update && pkg upgrade'
+alias pu='py ~/My-Project/Pkg-Update-Upgrade/pkg_update_upgrade.py'
 
 # Clear
 alias c='clear'
