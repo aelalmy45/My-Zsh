@@ -5,6 +5,11 @@ from pathlib import Path
 
 print("The process is starting, please wait a moment until it is complete.\n")
 
+#------- Create a history path -------
+STATE_HOME = Path.home() / ".local" / "state" / "zsh"
+STATE_HOME.mkdir(parents=True, exist_ok=True)
+#-------------------------------------
+
 SOURCE = Path(__file__).resolve().parent
 DEST = Path.home() / ".config" / "zsh"
 
