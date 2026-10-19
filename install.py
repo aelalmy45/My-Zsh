@@ -28,6 +28,8 @@ pkgs: dict = {
 }
 
 
+exceptions: dict = {".zshenv": Path.home()}
+
 denylist: list = [
     ".git",
     "plugins",
@@ -72,12 +74,15 @@ def update_upgrade() -> tuple[bool, str]:
         return False, "Make sure you are connected to the internet."
 
 
-def copy_files_with_rules(SOURCE, DEST, denylist) -> tuple[bool, str]:
+def copy_files_with_rules(SOURCE, DEST, exceptions, denylist) -> tuple[bool, str]:
     try:
         DEST.mkdir(parents=True, exist_ok=True)
         for item in SOURCE.iterdir():
             if item.name in denylist:
                 pass
+            elif item.name in exceptions:
+                dest_path = exceptions[item.name] / item.name
+                shutil.copy2(item, dest_path)
             else:
                 dest_path = DEST / item.name
                 shutil.copy2(item, dest_path)
@@ -134,7 +139,7 @@ def main() -> None:
     missing = check_package(pkgs, console)
 
     # ----------- Checking copy files ---------------
-    sucs_cp, msg_cp = copy_files_with_rules(SOURCE, DEST, denylist)
+    sucs_cp, msg_cp = copy_files_with_rules(SOURCE, DEST, exceptions, denylist)
     if not sucs_cp:
         console.print(f"[bold red]{msg_cp}[/]")
         return
