@@ -2,55 +2,48 @@ import shutil
 import subprocess
 from pathlib import Path
 
-
 print("The process is starting, please wait a moment until it is complete.\n")
 
-#------- Create a history path -------
+# ------- Create a history path -------
 STATE_HOME = Path.home() / ".local" / "state" / "zsh"
 STATE_HOME.mkdir(parents=True, exist_ok=True)
-#-------------------------------------
+# -------------------------------------
 
 SOURCE = Path(__file__).resolve().parent
 DEST = Path.home() / ".config" / "zsh"
 
 
 pkgs: dict = {
-        "zsh": "zsh",
-        "git": "git",
-        "eza": "eza",
-        "rg": "ripgrep",
-        "fd": "fd",
-        "bat": "bat",
-        "zoxide": "zoxide",
-        "fzf": "fzf",
-        "lf": "lf",
-        "nvim": "neovim",
-        "starship": "starship",
-    }
+    "zsh": "zsh",
+    "git": "git",
+    "eza": "eza",
+    "rg": "ripgrep",
+    "fd": "fd",
+    "bat": "bat",
+    "zoxide": "zoxide",
+    "fzf": "fzf",
+    "lf": "lf",
+    "nvim": "neovim",
+    "starship": "starship",
+}
 
-
-exceptions: dict = {
-        ".zprofile": Path.home()
-        }
 
 denylist: list = [
-        ".git",
-        "plugins",
-        "README.md", 
-        "install.py",
-        "install.sh", 
-        ".gitignore", 
-        "images",
-        ]
+    ".git",
+    "plugins",
+    "README.md",
+    "install.py",
+    "install.sh",
+    ".gitignore",
+    "images",
+]
 
 
 def ensure_rich_installed() -> tuple[bool, str]:
     try:
-        proc = subprocess.run([
-            "pip",
-            "install",
-            "rich"
-            ], capture_output=True, text=True, timeout=50)
+        proc = subprocess.run(
+            ["pip", "install", "rich"], capture_output=True, text=True, timeout=50
+        )
     except subprocess.TimeoutExpired:
         return False, "Make sure you are connected to the internet."
     if proc.returncode != 0:
@@ -61,18 +54,14 @@ def ensure_rich_installed() -> tuple[bool, str]:
 
 def update_upgrade() -> tuple[bool, str]:
     try:
-        update = subprocess.run([
-            "pkg",
-            "update",
-            "-y"
-            ], capture_output=True, text=True, timeout=60)
+        update = subprocess.run(
+            ["pkg", "update", "-y"], capture_output=True, text=True, timeout=60
+        )
 
         if update.returncode == 0:
-            upgrade = subprocess.run([
-                "pkg",
-                "upgrade",
-                "-y"
-                ], capture_output=True, text=True, timeout=60)
+            upgrade = subprocess.run(
+                ["pkg", "upgrade", "-y"], capture_output=True, text=True, timeout=60
+            )
             if upgrade.returncode == 0:
                 return True, f"Running start update and upgrade: \n{upgrade.stdout}"
             else:
@@ -83,21 +72,12 @@ def update_upgrade() -> tuple[bool, str]:
         return False, "Make sure you are connected to the internet."
 
 
-def copy_files_with_rules(
-        SOURCE,
-        DEST,
-        exceptions, 
-        denylist
-        ) -> tuple[bool, str]:
+def copy_files_with_rules(SOURCE, DEST, denylist) -> tuple[bool, str]:
     try:
-
         DEST.mkdir(parents=True, exist_ok=True)
         for item in SOURCE.iterdir():
             if item.name in denylist:
                 pass
-            elif item.name in exceptions:
-                dest_path = exceptions[item.name] / item.name
-                shutil.copy2(item, dest_path)
             else:
                 dest_path = DEST / item.name
                 shutil.copy2(item, dest_path)
@@ -108,12 +88,9 @@ def copy_files_with_rules(
 
 def install_pkgs(*pkg) -> tuple[bool, str]:
     try:
-        proc = subprocess.run([
-            "pkg",
-            "install",
-            *pkg,
-            "-y"
-            ], capture_output=True, text=True, timeout=60)
+        proc = subprocess.run(
+            ["pkg", "install", *pkg, "-y"], capture_output=True, text=True, timeout=60
+        )
         if proc.returncode != 0:
             return False, f"Error: \n{proc.stderr}"
 
@@ -136,12 +113,13 @@ def check_package(pkgs, console) -> list:
 
 def main() -> None:
     # ---------- Checking for rich ---------------
-    sucs_rich , msg_rich = ensure_rich_installed()
+    sucs_rich, msg_rich = ensure_rich_installed()
     if not sucs_rich:
         print(msg_rich)
         return
     # ---------------- Rich ----------------------
     from rich.console import Console
+
     console = Console()
     console.print(f"[bold green]{msg_rich}[/]")
 
@@ -156,7 +134,7 @@ def main() -> None:
     missing = check_package(pkgs, console)
 
     # ----------- Checking copy files ---------------
-    sucs_cp, msg_cp = copy_files_with_rules(SOURCE, DEST, exceptions, denylist)
+    sucs_cp, msg_cp = copy_files_with_rules(SOURCE, DEST, denylist)
     if not sucs_cp:
         console.print(f"[bold red]{msg_cp}[/]")
         return
@@ -164,7 +142,9 @@ def main() -> None:
 
     # ----------- Checking install pkgs -------------
     if missing:
-        with console.status("[bold green]Installing the packages...[/]", spinner="dots"):
+        with console.status(
+            "[bold green]Installing the packages...[/]", spinner="dots"
+        ):
             sucs_pkg, msg_pkg = install_pkgs(*missing)
         if not sucs_pkg:
             console.print(f"[bold red]{msg_pkg}[/]")
