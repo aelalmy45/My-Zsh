@@ -71,7 +71,7 @@ def install_font() -> tuple[bool, str]:
 
     # Apply the new font in Termux
     try:
-        subprocess.run(["termux-reload-settings"], capture_output=True)
+        subprocess.run(["termux-reload-settings"], capture_output=True, check=False)
     except FileNotFoundError:
         pass
 
@@ -90,6 +90,7 @@ def ensure_rich_installed() -> tuple[bool, str]:
         proc = subprocess.run(
             [sys.executable, "-m", "pip", "install", "rich"],
             capture_output=True,
+            check=False,
             text=True,
             timeout=PIP_TIMEOUT,
         )
@@ -107,6 +108,7 @@ def update_upgrade() -> tuple[bool, str]:
         update = subprocess.run(
             ["pkg", "update", "-y"],
             capture_output=True,
+            check=False,
             text=True,
             timeout=UPDATE_TIMEOUT,
         )
@@ -115,6 +117,7 @@ def update_upgrade() -> tuple[bool, str]:
             upgrade = subprocess.run(
                 ["pkg", "upgrade", "-y"],
                 capture_output=True,
+                check=False,
                 text=True,
                 timeout=UPGRADE_TIMEOUT,
             )
@@ -143,7 +146,7 @@ def copy_files_with_rules(source, dest, exceptions, denylist) -> tuple[bool, str
             else:
                 shutil.copy2(item, target)
         return True, "The files were successfully copied to their locations.\n"
-    except Exception as err:
+    except FileNotFoundError as err:
         return False, f"Error: {err}"
 
 
@@ -152,6 +155,7 @@ def install_pkgs(*pkg) -> tuple[bool, str]:
         proc = subprocess.run(
             ["pkg", "install", *pkg, "-y"],
             capture_output=True,
+            check=False,
             text=True,
             timeout=INSTALL_TIMEOUT,
         )
