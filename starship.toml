@@ -144,9 +144,15 @@ format = "[$symbol$version]($style) "
 # --------------------------------------------------
 
 [lua]
+format = "[$symbol$version]($style) "
+version_format = "v${raw}"
 symbol = "󰢱 "
 style = "#017BFF"
-format = "[$symbol$version]($style) "
+lua_binary = "lua"
+disabled = false
+detect_extensions = ["lua"]
+detect_files = [".lua-version"]
+detect_folders = ["lua"]
 
 # --------------------------------------------------
 # Character
