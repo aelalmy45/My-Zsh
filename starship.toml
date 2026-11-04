@@ -18,10 +18,26 @@ $python\
 $rust\
 $golang\
 $lua\
+$c\
+$cpp\
 $package
 [│](243)
 [╰─](243)$character"""
 
+
+# --------------------------------------------------
+# Time
+# --------------------------------------------------
+
+# right_format = "$time"
+#
+# [time]
+# format = "[$time]($style) "
+# style = "bold yellow"
+# use_12hr = true
+# disabled = false
+# utc_time_offset = "local"
+# time_range = "-"
 
 # --------------------------------------------------
 # OS
@@ -155,6 +171,75 @@ detect_files = [".lua-version"]
 detect_folders = ["lua"]
 
 # --------------------------------------------------
+# C
+# --------------------------------------------------
+
+[c]
+format = "[$symbol($version(-$name) )]($style)"
+version_format = "v${raw}"
+style = "149 bold"
+symbol = " "
+disabled = false
+detect_extensions = [
+    "c",
+    "h",
+]
+detect_files = []
+detect_folders = []
+commands = [
+    [
+    "cc",
+    "--version",
+],
+    [
+    "gcc",
+    "--version",
+],
+    [
+    "clang",
+    "--version",
+],
+]
+
+# --------------------------------------------------
+# C++
+# --------------------------------------------------
+
+[cpp]
+format = "[$symbol($version(-$name) )]($style)"
+version_format = "v${raw}"
+style = "149 bold"
+symbol = " "
+disabled = false
+detect_extensions = [
+    "cpp",
+    "cc",
+    "cxx",
+    "c++",
+    "hpp",
+    "hh",
+    "hxx",
+    "h++",
+    "tcc",
+]
+detect_files = []
+detect_folders = []
+commands = [
+    [
+    "c++",
+    "--version",
+],
+    [
+    "g++",
+    "--version",
+],
+    [
+    "clang++",
+    "--version",
+],
+]
+
+# --------------------------------------------------
 # Character
 # --------------------------------------------------
 
@@ -162,3 +247,4 @@ detect_folders = ["lua"]
 success_symbol = "[❯](bold #009F00)"
 error_symbol = "[󰅙 ❯](bold #FF0000)"
 vimcmd_symbol = "[NORMAL ❮](bold #017BFF)"
+disabled = false
