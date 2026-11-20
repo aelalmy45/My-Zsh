@@ -2,6 +2,7 @@ import importlib
 import shutil
 import subprocess
 import sys
+from datetime import datetime
 from pathlib import Path
 
 HOME_DIR = Path.home()
@@ -12,6 +13,10 @@ STATE_HOME = HOME_DIR / ".local" / "state" / "zsh"
 
 SOURCE = Path(__file__).resolve().parent
 DEST = HOME_DIR / ".config" / "zsh"
+
+# ------- Backups of replaced config -------
+BACKUP_ROOT = HOME_DIR / ".local" / "share" / "my-zsh" / "backups"
+# ------------------------------------------
 
 # ----------- Font File ---------------
 FONT_SRC = SOURCE / "font.ttf"
@@ -41,18 +46,62 @@ pkgs: dict = {
 }
 
 
-exceptions: dict = {".zshenv": Path.home()}
+exceptions: dict = {".zshenv": Path.home(), ".zprofile": Path.home()}
 
 denylist: list = [
     ".git",
     "plugins",
     "README.md",
+    "LICENSE",
     "install.py",
     "install.sh",
+    "uninstall.py",
+    "uninstall.sh",
     ".gitignore",
     "images",
     "font.ttf",
 ]
+
+
+def install_targets() -> dict:
+    """Every destination path the installer writes to, keyed by repo file name."""
+    targets = {}
+    for item in SOURCE.iterdir():
+        if item.name in denylist:
+            continue
+        targets[item.name] = exceptions.get(item.name, DEST) / item.name
+    return targets
+
+
+def backup_existing() -> tuple[bool, str]:
+    """Back up every existing file/dir the installer is about to overwrite."""
+    existing = []
+    if DEST.exists():
+        existing.append(DEST)
+    for path in install_targets().values():
+        if DEST in path.parents:
+            continue  # already covered by the whole-DEST backup above
+        if path.exists():
+            existing.append(path)
+    if not existing:
+        return True, "No existing config found - nothing to back up.\n"
+
+    stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+    backup_dir = BACKUP_ROOT / stamp
+    try:
+        for path in existing:
+            rel = path.relative_to(HOME_DIR)
+            saved = backup_dir / rel
+            saved.parent.mkdir(parents=True, exist_ok=True)
+            if path.is_dir():
+                # plugins are re-clonable, no need to back them up
+                shutil.copytree(path, saved, ignore=shutil.ignore_patterns("plugins"))
+            else:
+                shutil.copy2(path, saved)
+    except OSError as err:
+        return False, f"Backup failed, aborting before any change: {err}"
+
+    return True, f"Backed up existing config to {backup_dir}\n"
 
 
 def font_installed() -> bool:
@@ -204,6 +253,14 @@ def main() -> None:
     console.print(f"[bold green]{msg_up}[/]")
 
     missing = check_package(pkgs, console)
+
+    # ----------- Backing up existing config -----------
+    with console.status("[bold green]Backing up any existing config...[/]", spinner="dots"):
+        sucs_bak, msg_bak = backup_existing()
+    if not sucs_bak:
+        console.print(f"[bold red]{msg_bak}[/]")
+        return
+    console.print(f"[bold green]{msg_bak}[/]")
 
     # ----------- Checking copy files ---------------
     sucs_cp, msg_cp = copy_files_with_rules(SOURCE, DEST, exceptions, denylist)

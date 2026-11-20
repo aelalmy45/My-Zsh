@@ -1,8 +1,16 @@
 # Python
 alias py='python'
 
-# rm -rf
-alias rm='rm -rf'
+# Safer delete: move files to the trash when trash-cli is available
+# (pip install trash-cli), otherwise ask before removing anything.
+# Bypass with `command rm` when you really mean it.
+rm() {
+    if command -v trash-put >/dev/null 2>&1; then
+        trash-put "$@"
+    else
+        command rm -i "$@"
+    fi
+}
 
 # Clear
 alias c='clear'
@@ -46,7 +54,7 @@ lf() { # zsh follow lf navigation
     command lf -last-dir-path="$tmp" "$@"
     if [ -f "$tmp" ]; then
         dir=$(cat "$tmp")
-        rm -f "$tmp"
+        command rm -f "$tmp"
         [ -d "$dir" ] && [ "$dir" != "$(pwd)" ] && cd "$dir"
     fi
 }

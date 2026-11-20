@@ -13,7 +13,8 @@ A minimal, fast, and fully self-installing Zsh configuration built for **Termux*
 - **Modern CLI replacements** — `eza` instead of `ls`, `bat` for paging, `ripgrep` and `fd` for search, `zoxide` for smarter `cd`.
 - **Fuzzy everything** — `fzf` wired into file search and history, with a live preview pane.
 - **Vi-mode editing** — `zsh-vi-mode` with per-mode cursor shapes, plus autosuggestions, syntax highlighting, and substring history search.
-- **Self-updating plugin manager** — a lightweight custom loader that clones missing plugins on first run; no external plugin framework required.
+- **Pinned plugin manager** — a lightweight custom loader that clones missing plugins on first run, pinned to fixed upstream tags so every install gets the same tested code; no external plugin framework required.
+- **Safe by default** — the installer backs up your existing zsh config before touching anything, ships an uninstaller that restores it, and never aliases `rm` to something destructive.
 - **Colorful, transparent installer output** — powered by [rich](https://github.com/Textualize/rich), with spinners for long-running steps and clear pass/fail messages for every stage.
 
 ## Requirements
@@ -45,9 +46,26 @@ bash install.sh
 | 1. Rich setup | Installs the `rich` Python library used for the installer's own colored output |
 | 2. System update | Runs `pkg update && pkg upgrade` to refresh Termux's package index |
 | 3. Dependency check | Scans for required tools; anything missing is installed automatically |
-| 4. File placement | Copies every config file to its correct destination |
+| 4. Backup | Copies any existing `~/.zprofile`, `~/.zshenv`, and `~/.config/zsh` into a timestamped folder under `~/.local/share/my-zsh/backups/` |
+| 5. File placement | Copies every config file to its correct destination |
 
 If any stage fails (no internet, a broken package, etc.), the installer stops immediately with a clear red error message instead of continuing in a broken state.
+
+## Uninstalling
+
+Every install is reversible. Before the installer overwrites anything it saves your previous config, and the uninstaller puts it back:
+
+```bash
+bash uninstall.sh
+```
+
+This removes the My-Zsh files and restores the most recent backup. Useful flags:
+
+- `--list` — show all saved backups
+- `--backup <path>` — restore a specific backup instead of the latest one
+- `--yes` — skip the confirmation prompt
+
+The Termux font (`~/.termux/font.ttf`) is left in place, since it is harmless on its own.
 
 ## Tools Installed
 
@@ -79,8 +97,11 @@ My-Zsh/
 ├── plugins.zsh          # Minimal git-based plugin manager
 ├── prompt.zsh           # Starship initialization
 ├── starship.toml        # Prompt theme configuration
-├── install.py           # Main installer logic
+├── install.py           # Main installer logic (backs up your old config first)
 ├── install.sh           # Bootstrap entry point
+├── uninstall.py         # Removes the config and restores the latest backup
+├── uninstall.sh         # Bootstrap entry point for the uninstaller
+├── LICENSE               # MIT (with attribution to the upstream config)
 └── images/               # README assets
 ```
 
@@ -107,7 +128,7 @@ My-Zsh/
 | `glog` / `gadog` | Pretty, paged git log views |
 | `vim` | `nvim` |
 
-> ⚠️ Note: `rm` is aliased to `rm -rf`. This skips the usual confirmation and deletes recursively without asking — be deliberate when using it.
+> ℹ️ Note: `rm` is a safety wrapper, not the raw command. With [trash-cli](https://github.com/andreafrancia/trash-cli) installed (`pip install trash-cli`) files go to the trash instead of being deleted; otherwise `rm` asks before removing anything. Use `command rm` when you deliberately want the real thing.
 
 ## Keybindings
 
@@ -127,7 +148,7 @@ Installed automatically on first shell launch — no manual setup needed:
 - [zsh-vi-mode](https://github.com/jeffreytse/zsh-vi-mode)
 - [fast-syntax-highlighting](https://github.com/zdharma-continuum/fast-syntax-highlighting)
 
-Run `zplugin-update` any time to pull the latest version of every installed plugin.
+Each plugin is pinned to a fixed tag in `plugins.zsh` (currently autosuggestions v0.7.1, history-substring-search v1.1.0, zsh-vi-mode v0.12.0, fast-syntax-highlighting v1.56), so a fresh install never breaks because an upstream default branch changed. `zplugin-update` re-clones the pinned versions; to upgrade a plugin, bump its tag in `plugins.zsh` first.
 
 ## Customizing
 
@@ -151,4 +172,4 @@ This configuration builds on the excellent [zsh setup by Radley Sidwell-Lewis](h
 
 ## License
 
-Add a license of your choice here (e.g. [MIT](https://choosealicense.com/licenses/mit/)) before publishing, especially since this project builds on another author's work — check their license terms too.
+[MIT](LICENSE). The upstream [zsh setup by Radley Sidwell-Lewis](https://github.com/radleylewis/zsh) is MIT licensed too; its copyright notice is preserved in the LICENSE file.
